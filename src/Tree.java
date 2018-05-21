@@ -8,6 +8,7 @@ public class Tree<T> {
     private T rootNode;
     private Tree<T> leftChildNode = null;
     private Tree<T> rightChildNode = null;
+    private Integer min = null;
 
     public Tree(T rootNode){
         this.rootNode = rootNode;
@@ -31,5 +32,13 @@ public class Tree<T> {
 
     public void setRightChildNode(Tree<T> rightChildNode) {
         this.rightChildNode = rightChildNode;
+    }
+
+    public Integer getMin() {
+        return min;
+    }
+
+    public void setMin(Integer min) {
+        this.min = min;
     }
 }

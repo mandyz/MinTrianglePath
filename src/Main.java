@@ -32,9 +32,18 @@ public class Main {
         if(tree.getLeftChildNode() == null && tree.getRightChildNode() == null){
             minPath = tree.getRootNode();
         } else { // Inductive Case
-            minPath = Math.min(minPath(tree.getLeftChildNode()),minPath(tree.getRightChildNode())) + tree.getRootNode();
+            Integer leftChildNodeMin = tree.getLeftChildNode().getMin();
+            Integer rightChildNodeMin = tree.getRightChildNode().getMin();
+
+            minPath = Math.min(
+                    (leftChildNodeMin != null ? leftChildNodeMin :  minPath(tree.getLeftChildNode())),
+                    (rightChildNodeMin != null ? rightChildNodeMin : minPath(tree.getRightChildNode()))
+            ) + tree.getRootNode();
+
         }
 
+        // Store the minimum path obtained from this tree downwards (in the tree itself).
+        tree.setMin(minPath);
         return minPath;
     }
 
@@ -81,6 +90,7 @@ public class Main {
             }
         }
 
+        System.out.println("Finished parsing.");
         return root;
     }
 }
