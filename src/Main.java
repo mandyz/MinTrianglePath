@@ -1,3 +1,8 @@
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Scanner;
+
 /**
  *  Main class.
  *
@@ -6,7 +11,18 @@
 public class Main {
 
     public static void main(String[] args) {
-       System.out.println("Minimal path is: " + minPath(generateTestTree()));
+        // 1. Read input.
+        Scanner sc = new Scanner(System.in);
+        List<String> lines = new ArrayList<>();
+        while (sc.hasNext()){
+            lines.add(sc.nextLine());
+        }
+
+        // 2. Generate tree of trees.
+        Tree<Integer> tree = parseInput(lines);
+
+        // 3. Calculate minimal path.
+        System.out.println("Minimal path is: " + minPath(tree));
     }
 
     private static int minPath(Tree<Integer> tree){
@@ -22,40 +38,48 @@ public class Main {
         return minPath;
     }
 
-    private static Tree<Integer> generateTestTree(){
+    /**
+     * Parses input lines, to generate a tree.
+     *
+     * @param lines
+     * @return resulting tree.
+     */
+    private static Tree<Integer> parseInput(List<String> lines){
+        Tree<Integer> root = null;
+        List<Tree> previousTrees = null;
 
-        // 4th Level Trees
-        Tree<Integer> t1 = new Tree<>(11);
-        Tree<Integer> t2 = new Tree<>(2);
-        Tree<Integer> t3 = new Tree<>(10);
-        Tree<Integer> t4 = new Tree<>(9);
+        for(int i= 0; i < lines.size(); i++){
+            if (i != 0){
+                List<Tree> newTrees = new LinkedList<>();
 
-        // 3rd Level Trees
-        Tree<Integer> t5 = new Tree<>(3);
-        t5.setLeftChildNode(t1);
-        t5.setRightChildNode(t2);
+                String[] nodes = lines.get(i).split(" ");
+                for(int j = 0; j < nodes.length; j++){
+                    Tree<Integer> tree = new Tree<>(Integer.parseInt(nodes[j]));;
 
-        Tree<Integer> t6 = new Tree<>(8);
-        t6.setLeftChildNode(t2);
-        t6.setRightChildNode(t3);
+                    if(j == 0){
+                        // Add tree to the left node of the first tree in the previous level.
+                        previousTrees.get(j).setLeftChildNode(tree);
+                    } else if(j == nodes.length -1){
+                        // Add tree to the right node of the last tree in the previous level.
+                        previousTrees.get(j-1).setRightChildNode(tree);
+                    } else {
+                        // Add tree to the right node of the tree with id = current_id -1 in the previous level.
+                        previousTrees.get(j-1).setRightChildNode(tree);
+                        // Add tree to the left node of the tree with id = current_id in the previous level.
+                        previousTrees.get(j).setLeftChildNode(tree);
+                    }
 
-        Tree<Integer> t7 = new Tree<>(5);
-        t7.setLeftChildNode(t3);
-        t7.setRightChildNode(t4);
+                    newTrees.add(tree);
 
-        // 2nd Level Trees
-        Tree<Integer> t8 = new Tree<>(6);
-        t8.setLeftChildNode(t5);
-        t8.setRightChildNode(t6);
+                }
 
-        Tree<Integer> t9 = new Tree<>(3);
-        t9.setLeftChildNode(t6);
-        t9.setRightChildNode(t7);
-
-        // 1st Level Tree
-        Tree<Integer> root = new Tree<>(7);
-        root.setLeftChildNode(t8);
-        root.setRightChildNode(t9);
+                previousTrees = newTrees;
+            } else { // Base Case
+                root = new Tree<>(Integer.valueOf(lines.get(i)));
+                previousTrees = new LinkedList<>();
+                previousTrees.add(root);
+            }
+        }
 
         return root;
     }
