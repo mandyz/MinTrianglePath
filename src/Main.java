@@ -22,29 +22,52 @@ public class Main {
         Tree<Integer> tree = parseInput(lines);
 
         // 3. Calculate minimal path.
-        System.out.println("Minimal path is: " + minPath(tree));
+        Path minimumPath = minPath(tree);
+        System.out.println("Minimal path is: " + minimumPath.getPath() + " = " + minimumPath.getPathValue());
     }
 
-    private static int minPath(Tree<Integer> tree){
-        int minPath = 0;
+    /**
+     * Computes the summation of the minimum path in a triangle of numbers (represented as a tree of trees).
+     *
+     * @param tree
+     * @return
+     */
+    private static Path minPath(Tree<Integer> tree){
+        Path minimumPath = null;
 
         // Base Case
         if(tree.getLeftChildNode() == null && tree.getRightChildNode() == null){
-            minPath = tree.getRootNode();
+            int minPath = tree.getRootNode();
+            minimumPath = new Path(minPath + "", minPath);
         } else { // Inductive Case
-            Integer leftChildNodeMin = tree.getLeftChildNode().getMin();
-            Integer rightChildNodeMin = tree.getRightChildNode().getMin();
+            Path leftChildNodeMin = tree.getLeftChildNode().getMinimumPath();
+            Path rightChildNodeMin = tree.getRightChildNode().getMinimumPath();
 
-            minPath = Math.min(
+
+            Path prevMinimumPath = min(
                     (leftChildNodeMin != null ? leftChildNodeMin :  minPath(tree.getLeftChildNode())),
                     (rightChildNodeMin != null ? rightChildNodeMin : minPath(tree.getRightChildNode()))
-            ) + tree.getRootNode();
+            );
+
+            minimumPath = new Path( tree.getRootNode() + " + " + prevMinimumPath.getPath(),prevMinimumPath.getPathValue() + tree.getRootNode());
 
         }
 
         // Store the minimum path obtained from this tree downwards (in the tree itself).
-        tree.setMin(minPath);
-        return minPath;
+        tree.setMinimumPath(minimumPath);
+        return minimumPath;
+    }
+
+    /**
+     * Compares two Paths and returns the Path with the least path value.
+     * A path value is the summation of all nodes in the path.
+     *
+     * @param p1
+     * @param p2
+     * @return
+     */
+    private static Path min(Path p1, Path p2){
+        return p1.getPathValue() >= p2.getPathValue() ? p2 : p1;
     }
 
     /**

@@ -1,12 +1,12 @@
 # MinTrianglePath
 
-This command line application accepts a number of lines containing space separated integers which together represent a triangle of numbers. 
+This command line application accepts a number of lines containing space separated (positive) integers which together represent a triangle of numbers. 
 The application then calculates the minimum triangle path, i.e. the path who's summation is the least from all other paths.
 
 ### Compiling and Executing:
 1. Download source code.
 
-2. `cd {cod_location}/src/`
+2. `cd {code_location}/src/`
 3. `javac Main.java`
 4.
 ~~~~

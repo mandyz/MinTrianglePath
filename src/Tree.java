@@ -8,7 +8,7 @@ public class Tree<T> {
     private T rootNode;
     private Tree<T> leftChildNode = null;
     private Tree<T> rightChildNode = null;
-    private Integer min = null;
+    private Path minimumPath = null;
 
     public Tree(T rootNode){
         this.rootNode = rootNode;
@@ -34,11 +34,11 @@ public class Tree<T> {
         this.rightChildNode = rightChildNode;
     }
 
-    public Integer getMin() {
-        return min;
+    public Path getMinimumPath() {
+        return minimumPath;
     }
 
-    public void setMin(Integer min) {
-        this.min = min;
+    public void setMinimumPath(Path minimumPath) {
+        this.minimumPath = minimumPath;
     }
 }
