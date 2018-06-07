@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  *  Main class.
@@ -35,21 +32,23 @@ public class Main {
     private static Path minPath(Tree<Integer> tree){
         Path minimumPath = null;
 
-        // Base Case
+        // Base Case - Leaf Node (no child nodes)
         if(tree.getLeftChildNode() == null && tree.getRightChildNode() == null){
             int minPath = tree.getRootNode();
             minimumPath = new Path(minPath + "", minPath);
         } else { // Inductive Case
+            // Retrieving minimal path of child nodes, if they're already computed.
             Path leftChildNodeMin = tree.getLeftChildNode().getMinimumPath();
             Path rightChildNodeMin = tree.getRightChildNode().getMinimumPath();
 
 
-            Path prevMinimumPath = min(
+            // Choose minimal path from left (child) path and right (child) path.
+            Path mimimumChildPath = min(
                     (leftChildNodeMin != null ? leftChildNodeMin :  minPath(tree.getLeftChildNode())),
                     (rightChildNodeMin != null ? rightChildNodeMin : minPath(tree.getRightChildNode()))
             );
 
-            minimumPath = new Path( tree.getRootNode() + " + " + prevMinimumPath.getPath(),prevMinimumPath.getPathValue() + tree.getRootNode());
+            minimumPath = new Path( tree.getRootNode() + " + " + mimimumChildPath.getPath(),mimimumChildPath.getPathValue() + tree.getRootNode());
 
         }
 
@@ -86,12 +85,12 @@ public class Main {
 
                 String[] nodes = lines.get(i).split(" ");
                 for(int j = 0; j < nodes.length; j++){
-                    Tree<Integer> tree = new Tree<>(Integer.parseInt(nodes[j]));;
+                    Tree<Integer> tree = new Tree<>(Integer.parseInt(nodes[j]));
 
-                    if(j == 0){
+                    if(j == 0){ // First Tree in this level.
                         // Add tree to the left node of the first tree in the previous level.
                         previousTrees.get(j).setLeftChildNode(tree);
-                    } else if(j == nodes.length -1){
+                    } else if(j == nodes.length -1){ // Last Tree in this level.
                         // Add tree to the right node of the last tree in the previous level.
                         previousTrees.get(j-1).setRightChildNode(tree);
                     } else {
@@ -116,4 +115,5 @@ public class Main {
         System.out.println("Finished parsing.");
         return root;
     }
+
 }
